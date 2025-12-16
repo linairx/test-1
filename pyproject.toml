@@ -1,0 +1,12 @@
+[project]
+name = "project"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "interception-python>=1.13.6",
+    "pyclick>=0.0.2",
+    "pynput>=1.8.1",
+    "pywin32>=311",
+]
