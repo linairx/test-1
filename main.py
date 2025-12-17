@@ -123,13 +123,28 @@ def skill_7():
     log("执行技能 7: 组合序列")
     if drive_tap_key('up'): return
     if drive_tap_key('alt'): return
+    if drive_tap_key('alt'): return
     if drive_tap_key('s'): return
     check_fatigue()
 
 def skill_8():
-    log("执行技能 8/9: 连续闪避 (A)")
-    for _ in range(random.randint(1, 4)):
-        if drive_tap_key('a'): return
+    """技能 8: 左闪避 (连按 A)"""
+    log("执行技能 8: 向左闪避 (A)")
+    with interception.hold_key(key="left"):
+        if drive_tap_key('s'): return
+        for _ in range(random.randint(1, 3)):
+            if drive_tap_key('a'): return
+        
+    check_fatigue()
+
+def skill_9():
+    """技能 9: 右闪避 (连按 D)"""
+    log("执行技能 9: 向右闪避 (D)")
+    with interception.hold_key(key="right"):
+        if drive_tap_key('s'): return
+        for _ in range(random.randint(1, 3)):
+            if drive_tap_key('a'): return
+        
     check_fatigue()
 
 def skill_0():
@@ -164,7 +179,8 @@ def keyboard_listener():
         if k == Key.esc: exit_event.set(); return False
         elif k == '1': task_queue.put(mouse_chaos_drag)
         elif k == '7': task_queue.put(skill_7)
-        elif k == '8' or k == '9': task_queue.put(skill_8)
+        elif k == '8': task_queue.put(skill_8)
+        elif k == '9': task_queue.put(skill_9)
         elif k == '0': task_queue.put(skill_0)
         elif k == Key.f8:
             if pause_event.is_set(): pause_event.clear(); log("暂停 (F8)")
