@@ -133,8 +133,8 @@ class TargetFinder:
 def skill_6():
     log("执行技能 6: 向上跳跃")
     with interception.hold_key(key="up"):
-        if drive_tap_key('alt', random.uniform(0.14, 0.15)): return
-        if drive_tap_key('alt'): return
+        for _ in range(random.randint(2, 5)):
+            if drive_tap_key('alt', random.uniform(0.14, 0.15)): return
         if drive_tap_key('s'): return
     check_fatigue()
 
