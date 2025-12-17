@@ -36,7 +36,7 @@ def check_fatigue():
         last_fatigue_time = time.time()
 
 # --- 核心操作：驱动按键 ---
-def drive_tap_key(key_str):
+def drive_tap_key(key_str, delay=None):  # 添加可选参数 delay，默认为 None
     if not target_hwnd or not win32gui.IsWindow(target_hwnd):
         log("错误：请先探测具体的子窗口区域！")
         return True
@@ -49,7 +49,18 @@ def drive_tap_key(key_str):
         
         log(f"驱动执行：向 [{key_str}] 键施压")
         interception.press(key_str)
-        time.sleep(random.uniform(0.2, 0.4))
+        
+        # --- 修改逻辑 ---
+        if delay is not None:
+            # 如果传入了延迟，则使用固定值
+            actual_delay = delay
+        else:
+            # 否则使用原有的随机逻辑
+            actual_delay = random.uniform(0.2, 0.4)
+            
+        time.sleep(actual_delay)
+        # ----------------
+        
     except Exception as e:
         log(f"按键失败: {e}")
     return False
@@ -119,12 +130,18 @@ class TargetFinder:
                 log("获取分辨率失败")
 
 # --- 技能序列定义 ---
+def skill_6():
+    log("执行技能 6: 向上跳跃")
+    with interception.hold_key(key="up"):
+        if drive_tap_key('alt', 0.212): return
+        if drive_tap_key('alt'): return
+        if drive_tap_key('s'): return
+    check_fatigue()
+
 def skill_7():
-    log("执行技能 7: 组合序列")
-    if drive_tap_key('up'): return
-    if drive_tap_key('alt'): return
-    if drive_tap_key('alt'): return
-    if drive_tap_key('s'): return
+    log("执行技能 7: 下跳")
+    with interception.hold_key(key="down"):
+        if drive_tap_key('alt'): return
     check_fatigue()
 
 def skill_8():
@@ -178,6 +195,7 @@ def keyboard_listener():
         
         if k == Key.esc: exit_event.set(); return False
         elif k == '1': task_queue.put(mouse_chaos_drag)
+        elif k == '6': task_queue.put(skill_6)
         elif k == '7': task_queue.put(skill_7)
         elif k == '8': task_queue.put(skill_8)
         elif k == '9': task_queue.put(skill_9)
